@@ -1,0 +1,25 @@
+# 服务器端口配置
+server:
+  port: 8089  # 设置应用程序运行的端口号为8089
+
+# 数据库连接配置
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource  # 使用Druid作为数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL JDBC驱动
+    url: jdbc:mysql://localhost:3306/itmk-base?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8  # 数据库连接URL
+    username: root  # 数据库用户名
+    password: 123456  # 数据库密码
+
+# MyBatis Plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 配置MyBatis日志实现为标准输出
+  global-config:
+    db-config:
+      update-strategy: not_empty  # 配置更新策略，只更新非空字段
+
+# 日志配置
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd} [%thread] %-5level %logger- %msg%n'  # 控制台日志输出格式
