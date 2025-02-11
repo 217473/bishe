@@ -75,10 +75,13 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void deleteUser(Long userId) {
         //删除用户
         int i = this.baseMapper.deleteById(userId);
-        //删除角色
-        //删除用户原来的角色
-        QueryWrapper<SysUserRole> query = new QueryWrapper<>();
-        query.lambda().eq(SysUserRole::getUserId,userId);
-        sysUserRoleService.remove(query);
+        if(i>0){
+            //删除角色
+            //删除用户原来的角色
+            QueryWrapper<SysUserRole> query = new QueryWrapper<>();
+            query.lambda().eq(SysUserRole::getUserId,userId);
+            sysUserRoleService.remove(query);
+        }
+
     }
 }

@@ -7,6 +7,7 @@
     :popper-append-to-body="false"
     :style="selectWidth"
     @remove-tag="removeTag"
+    style="width: 100%"
   >
     <el-option
       v-for="item in options"
@@ -26,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 //定义下拉的数据类型
 type SelectIem = {
   value: string | number;
@@ -41,6 +42,12 @@ let props = defineProps({
   },
   width: {
     type: Number,
+    default() {
+      return 220;
+    },
+  },
+  bindValue: {
+    type: Array<string | number>,
     default() {
       return 220;
     },
@@ -94,6 +101,31 @@ const selectAll = (isAll: boolean) => {
   }
   emit('selected', selectedOptions.value);
 };
+//清空下拉的数据
+const clear = () => {
+  selectedOptions.value = [];
+};
+//暴露出去，给外部组件使用
+defineExpose({
+  clear,
+});
+//watch监听
+watch(
+  () => props.bindValue,
+  () => {
+    //设置选中的值
+    selectedOptions.value = props.bindValue;
+    //设置checkbox为选中
+    props.bindValue.forEach((item) => {
+      props.options.find((dom) => {
+        if (dom.value == item) {
+          dom.check = true;
+        }
+      });
+    });
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss">

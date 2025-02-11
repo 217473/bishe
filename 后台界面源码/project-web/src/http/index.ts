@@ -131,7 +131,7 @@ class Http {
   get<T = Result>(url: string, params?: object): Promise<T> {
     return this.instance.get(url, { params });
   }
-  ///delete请求
+  //delete请求
   delete<T = Result>(url: string): Promise<T> {
     return this.instance.delete(url);
   }
