@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/index.vue';
-import { iconPropType } from 'element-plus/es/utils';
-import { title } from 'process';
 
 const router: Array<RouteRecordRaw> = [
   {

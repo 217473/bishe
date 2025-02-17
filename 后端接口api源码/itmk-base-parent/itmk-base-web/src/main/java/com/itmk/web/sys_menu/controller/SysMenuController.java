@@ -40,7 +40,14 @@ public class SysMenuController {
 
     //删除
     @DeleteMapping("/{menuId}")
-    public ResultVo edit(@PathVariable("menuId") Long menuId){
+    public ResultVo delete(@PathVariable("menuId") Long menuId){
+        //如果存在下级，不能删除
+        QueryWrapper<SysMenu> query = new QueryWrapper<>();
+        query.lambda().eq(SysMenu::getParentId,menuId);
+        List<SysMenu> list = sysMenuService.list(query);
+        if (list.size() > 0){
+            return ResultUtils.error("该菜单存在下级，不能删除！");
+        }
         if (sysMenuService.removeById(menuId)){
             return ResultUtils.success("删除成功！");
         }
