@@ -172,7 +172,7 @@ import {
   getRoleListApi,
   editApi,
   deleteApi,
-  resetPasswordApi
+  resetPasswordApi,
 } from '@/api/user/index';
 import { User } from '@/api/user/UserModel';
 import useInstance from '@/hooks/useInstance';
@@ -336,7 +336,9 @@ const deleteBtn = async (userId: string) => {
 };
 //重置密码
 const resetPasswordBtn = async (userId: string) => {
-  const confirm = await global.$myconfirm("确定重置密码吗?重置之后密码是【666666】");
+  const confirm = await global.$myconfirm(
+    '确定重置密码吗?重置之后密码是【666666】'
+  );
   if (confirm) {
     let res = await resetPasswordApi({ userId: userId });
     if (res && res.code == 200) {
@@ -345,7 +347,7 @@ const resetPasswordBtn = async (userId: string) => {
       getList();
     }
   }
-}
+};
 //勾选的值
 const selected = (value: Array<string | number>) => {
   // console.log(value);
