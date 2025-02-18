@@ -1,5 +1,5 @@
 import http from '@/http';
-import { User, UserListParm } from './UserModel';
+import { User, UserListParm,Login } from './UserModel';
 //新增
 export const addApi = (parm: User) => {
   return http.post('/api/sysUser', parm);
@@ -21,6 +21,14 @@ export const deleteApi = (userId: string) => {
   return http.delete(`/api/sysUser/${userId}`);
 };
 //新增
-export const resetPasswordApi = (parm: {userId:string}) => {
+export const resetPasswordApi = (parm: { userId: string }) => {
   return http.post('/api/sysUser/resetPassword', parm);
+};
+//验证码
+export const getImgApi = () => {
+  return http.post('/api/sysUser/getImage');
+};
+//登录
+export const loginApi = (parm: Login) => {
+  return http.post('/api/sysUser/login',parm);
 };

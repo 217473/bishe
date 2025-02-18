@@ -2,22 +2,30 @@ package com.itmk.web.sys_user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itmk.web.sys_menu.entity.AssignTreeParm;
+import com.itmk.web.sys_menu.entity.AssignTreeVo;
+import com.itmk.web.sys_menu.entity.SysMenu;
+import com.itmk.web.sys_menu.service.SysMenuService;
 import com.itmk.web.sys_user.entity.SysUser;
 import com.itmk.web.sys_user.mapper.SysUserMapper;
 import com.itmk.web.sys_user.service.SysUserService;
 import com.itmk.web.sys_user_role.entity.SysUserRole;
 import com.itmk.web.sys_user_role.service.SysUserRoleService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
     @Autowired
     private SysUserRoleService sysUserRoleService;
+    @Autowired
+    private SysMenuService sysMenuService;
 
     @Transactional
     @Override
@@ -83,5 +91,33 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             sysUserRoleService.remove(query);
         }
 
+    }
+
+    @Override
+    public AssignTreeVo getAssignTree(AssignTreeParm parm) {
+        //查询用户信息
+        SysUser user = this.baseMapper.selectById(parm.getUserId());
+        List<SysMenu> menuList = null;
+        //判断是否是超级管理员
+        if(StringUtils.isNotEmpty(user.getIsAdmin()) && "1".equals(user.getIsAdmin())){
+            //是超级管理员,查询所有菜单
+            menuList = sysMenuService.list();
+        }else{
+            menuList = sysMenuService.getMenuByUserId(parm.getUserId());
+        }
+        //查询角色原来的菜单
+        List<SysMenu> roleList = sysMenuService.getMenuByRoleId(parm.getRoleId());
+        List<Long> ids = new ArrayList<>();
+        Optional.ofNullable(roleList).orElse(new ArrayList<>())
+                .stream()
+                .filter(item -> item != null)
+                .forEach(item ->{
+                    ids.add(item.getMenuId());
+                });
+        //组装返回数据
+        AssignTreeVo vo = new AssignTreeVo();
+        vo.setCheckList(ids.toArray());
+        vo.setMenuList(menuList);
+        return null;
     }
 }

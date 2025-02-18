@@ -74,4 +74,6 @@ public class SysMenuController {
         List<SysMenu> list = sysMenuService.getParent();
         return ResultUtils.success("查询成功！",list);
     }
+
+
 }

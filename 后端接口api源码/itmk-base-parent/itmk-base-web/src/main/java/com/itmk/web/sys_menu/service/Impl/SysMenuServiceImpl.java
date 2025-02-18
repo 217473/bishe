@@ -2,21 +2,26 @@ package com.itmk.web.sys_menu.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itmk.web.sys_menu.entity.AssignTreeParm;
+import com.itmk.web.sys_menu.entity.AssignTreeVo;
 import com.itmk.web.sys_menu.entity.MakeMenuTree;
 import com.itmk.web.sys_menu.entity.SysMenu;
 import com.itmk.web.sys_menu.mapper.SysMenuMapper;
 import com.itmk.web.sys_menu.service.SysMenuService;
+import com.itmk.web.sys_user.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
+    @Autowired
+    private SysUserService sysUserService;
     @Override
-    @Transactional
     public List<SysMenu> getParent() {
         String[] type = {"0", "1"};
         List<String> strings = Arrays.asList(type);
@@ -35,4 +40,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         List<SysMenu> tree = MakeMenuTree.makeTree(menuList,-1L);
         return tree;
     }
+
+    @Override
+    public List<SysMenu> getMenuByUserId(Long userId) {
+        return this.baseMapper.getMenuByUserId(userId);
+    }
+
+    @Override
+    public List<SysMenu> getMenuByRoleId(Long roleId) {
+        return this.baseMapper.getMenuByRoleId(roleId);
+    }
+
+
 }

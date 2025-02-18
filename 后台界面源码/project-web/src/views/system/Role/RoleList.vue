@@ -90,7 +90,6 @@ import { ElMessage, FormInstance } from 'element-plus';
 import { addApi, getListApi, editApi, deleteApi } from '@/api/role/index';
 import { SysRole } from '@/api/role/RoleModel';
 import useInstance from '@/hooks/useInstance';
-// import { console } from 'inspector';
 //获取全局golbal属性
 const { global } = useInstance();
 //表单ref属性
@@ -217,7 +216,7 @@ const resetBtn = () => {
 };
 onMounted(() => {
   nextTick(() => {
-    tableHeight.value = window.innerHeight - 230;
+    tableHeight.value = window.innerHeight - 200;
   });
   getList();
 });

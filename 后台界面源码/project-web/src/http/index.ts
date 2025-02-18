@@ -11,6 +11,7 @@ const config = {
   baseURL: 'http://localhost:8089', //请求接口的地址
   // baseUrl:'/api',
   timeout: 10000, //请求超时时间
+  withCredentials: true//跨域请求时是否需要使用凭证
 };
 //定义返回值类型
 export interface Result<T = any> {
