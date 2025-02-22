@@ -11,6 +11,15 @@ spring:
     username: root  # 数据库用户名
     password: 123456  # 数据库密码
 
+#jwt 配置
+jwt:
+  #颁发者
+  issuer: itmk
+  #秘钥
+  secret: com.itmk
+  #30分钟过期
+  expiration: 30
+
 # MyBatis Plus配置
 mybatis-plus:
   configuration:

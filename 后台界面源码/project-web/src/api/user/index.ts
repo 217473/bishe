@@ -1,5 +1,5 @@
 import http from '@/http';
-import { User, UserListParm,Login } from './UserModel';
+import { User, UserListParm, Login, AssignParm, UpdateParm } from './UserModel';
 //新增
 export const addApi = (parm: User) => {
   return http.post('/api/sysUser', parm);
@@ -30,5 +30,17 @@ export const getImgApi = () => {
 };
 //登录
 export const loginApi = (parm: Login) => {
-  return http.post('/api/sysUser/login',parm);
+  return http.post('/api/sysUser/login', parm);
+};
+//查询菜单树
+export const getAssignTreeApi = (parm: AssignParm) => {
+  return http.get('/api/sysUser/getAssignTree', parm);
+};
+//修改密码
+export const updatePasswordApi = (parm: UpdateParm) => {
+  return http.post('/api/sysUser/updatePassword', parm);
+};
+//获取用户信息
+export const getInfoApi = (userId: string) => {
+  return http.get('/api/sysUser/getInfo',{userId:userId});
 };

@@ -10,6 +10,8 @@ import com.itmk.web.sys_role.entity.RoleParm;
 import com.itmk.web.sys_role.entity.SelectItme;
 import com.itmk.web.sys_role.entity.SysRole;
 import com.itmk.web.sys_role.service.SysRoleService;
+import com.itmk.web.sys_role_menu.RoleMenu.RoleMenuService;
+import com.itmk.web.sys_role_menu.entity.SaveMenuParm;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,8 @@ import java.util.Optional;
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
+    @Autowired
+    private RoleMenuService roleMenuService;
 
     // 新增
     @PostMapping
@@ -86,6 +90,12 @@ public class SysRoleController {
                     selectItmes.add(vo);
                 });
         return ResultUtils.success("查询成功",selectItmes);
+    }
+    //保存角色菜单
+    @PostMapping("/saveRoleMenu")
+    public ResultVo saveRoleMenu(@RequestBody SaveMenuParm parm) {
+        roleMenuService.saveRoleMenu(parm);
+        return ResultUtils.success("分配成功！");
     }
 }
 

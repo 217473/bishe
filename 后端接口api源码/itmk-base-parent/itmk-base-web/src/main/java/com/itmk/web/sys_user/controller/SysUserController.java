@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.itmk.jwt.JwtUtils;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
 import com.itmk.web.sys_menu.entity.AssignTreeParm;
 import com.itmk.web.sys_menu.entity.AssignTreeVo;
-import com.itmk.web.sys_user.entity.LoginParm;
-import com.itmk.web.sys_user.entity.LoginVo;
-import com.itmk.web.sys_user.entity.SysUser;
-import com.itmk.web.sys_user.entity.SysUserPage;
+import com.itmk.web.sys_menu.entity.SysMenu;
+import com.itmk.web.sys_menu.service.SysMenuService;
+import com.itmk.web.sys_user.entity.*;
 import com.itmk.web.sys_user.service.SysUserService;
 import com.itmk.web.sys_user_role.entity.SysUserRole;
 import com.itmk.web.sys_user_role.service.SysUserRoleService;
@@ -27,10 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/sysUser")
 @RestController
@@ -41,6 +39,10 @@ public class SysUserController {
     private SysUserRoleService sysUserRoleService;
     @Autowired
     private DefaultKaptcha defaultKaptcha;
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    private SysMenuService sysMenuService;
 
     //新增
     @PostMapping
@@ -173,6 +175,11 @@ public class SysUserController {
         LoginVo vo = new LoginVo();
         vo.setUserId(one.getUserId());
         vo.setNickName(one.getNickName());
+        //生成token
+        Map<String, String> map = new HashMap<>();
+        map.put("userId",Long.toString(one.getUserId()));
+        String token = jwtUtils.generateToken(map);
+        vo.setToken(token);
         return ResultUtils.success("登录成功！",vo);
 
     }
@@ -181,6 +188,49 @@ public class SysUserController {
     public ResultVo getAssignTree(AssignTreeParm parm){
         AssignTreeVo assignTree = sysUserService.getAssignTree(parm);
         return ResultUtils.success("查询成功！",assignTree);
+    }
+
+    //修改登录密码
+    @PostMapping("/updatePassword")
+    public ResultVo updatePassword(@RequestBody UpdatePasswordParm parm){
+        SysUser user = sysUserService.getById(parm.getUserId());
+        if(!parm.getOldPassword().equals(user.getPassword())){
+            return ResultUtils.error("原密码不正确！");
+        }
+        //更新条件
+        UpdateWrapper<SysUser> query = new UpdateWrapper<>();
+        query.lambda().set(SysUser::getPassword,parm.getPassword())
+                .eq(SysUser::getUserId,parm.getUserId());
+        if (sysUserService.update(query)){
+            return ResultUtils.success("密码修改成功！");
+        }
+        return ResultUtils.error("密码修改失败！");
+    }
+
+    //获取用户信息
+    @GetMapping("/getInfo")
+    public ResultVo getInfo(Long userId){
+        //根据用户id查询用户信息
+        SysUser user = sysUserService.getById(userId);
+        List<SysMenu> menuList = null;
+        if(StringUtils.isNotEmpty(user.getIsAdmin()) && "1".equals(user.getIsAdmin())){
+            //是超级管理员,查询所有菜单
+            menuList = sysMenuService.list();
+        }else{
+            menuList = sysMenuService.getMenuByUserId(user.getUserId());
+        }
+        //获取菜单表的code字段
+        List<String> collect = Optional.ofNullable(menuList).orElse(new ArrayList<>())
+                .stream()
+                .filter(item -> StringUtils.isNotEmpty(item.getCode()))
+                .map(item -> item.getCode())
+                .collect(Collectors.toList());
+        //设置返回值
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(user.getNickName());
+        userInfo.setUserId(user.getUserId());
+        userInfo.setPermissons(collect.toArray());
+        return ResultUtils.success("查询成功！",userInfo);
     }
 }
 

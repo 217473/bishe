@@ -6,6 +6,7 @@ import axios, {
 } from 'axios';
 
 import { ElMessage } from 'element-plus';
+import { userSotre } from '@/store/user';
 //axios的配置
 const config = {
   baseURL: 'http://localhost:8089', //请求接口的地址
@@ -34,8 +35,9 @@ class Http {
     //请求发送之前的处理：请求头携带的token
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
+        let store = userSotre();
         //获取token
-        let token = '';
+        let token = store.getToken;
         if (token && config) {
           config.headers!['token'] = token;
         }

@@ -2,8 +2,6 @@ package com.itmk.web.sys_menu.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.itmk.web.sys_menu.entity.AssignTreeParm;
-import com.itmk.web.sys_menu.entity.AssignTreeVo;
 import com.itmk.web.sys_menu.entity.MakeMenuTree;
 import com.itmk.web.sys_menu.entity.SysMenu;
 import com.itmk.web.sys_menu.mapper.SysMenuMapper;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 

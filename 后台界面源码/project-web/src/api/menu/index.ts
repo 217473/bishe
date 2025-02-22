@@ -20,3 +20,7 @@ export const editApi = (parm: MenuType) => {
 export const deleteApi = (menuId: string) => {
   return http.delete(`/api/sysMenu/${menuId}`);
 };
+//获取菜单数据
+export const getMenuListApi = (userId: string) => {
+  return http.get('/api/sysMenu/getMenuList',{userId:userId});
+};

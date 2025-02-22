@@ -1,5 +1,5 @@
 import http from "@/http";
-import { RoleListParm, SysRole } from "./RoleModel";
+import { RoleListParm, SysRole,SaveMenuParm } from "./RoleModel";
 //新增角色
 export const addApi = (parm:SysRole) => {
     return http.post("/api/role",parm);
@@ -20,4 +20,8 @@ export const deleteApi = (roleId:string) => {
 // 角色下拉
 export const getSelectApi = () => {
     return http.get("/api/role/selectList")
+}
+//分配菜单保存
+export const saveRoleMenuApi = (parm: SaveMenuParm) => {
+    return http.post("/api/role/saveRoleMenu",parm)
 }

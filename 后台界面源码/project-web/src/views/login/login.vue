@@ -19,6 +19,7 @@
       </el-form-item>
       <el-form-item prop="password">
         <el-input
+          type="password"
           placeholder="请输入密码"
           v-model="loginModel.password"
         ></el-input>
@@ -111,6 +112,7 @@ const commit = () => {
         console.log(res);
         store.setUserId(res.data.userId);
         store.setNickName(res.data.nickName);
+        store.setToken(res.data.token);
         //跳转首页
         router.push({ path: '/' });
       }

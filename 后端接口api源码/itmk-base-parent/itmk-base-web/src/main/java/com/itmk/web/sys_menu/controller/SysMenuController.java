@@ -4,19 +4,29 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itmk.utils.ResultUtils;
 import com.itmk.utils.ResultVo;
 import com.itmk.web.sys_menu.entity.MakeMenuTree;
+import com.itmk.web.sys_menu.entity.RouterVO;
 import com.itmk.web.sys_menu.entity.SysMenu;
 import com.itmk.web.sys_menu.service.SysMenuService;
+import com.itmk.web.sys_user.entity.SysUser;
+import com.itmk.web.sys_user.service.SysUserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequestMapping("/api/sysMenu")
 @RestController
 public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private SysUserService sysUserService;
+
 
     //新增
     @PostMapping
@@ -74,6 +84,28 @@ public class SysMenuController {
         List<SysMenu> list = sysMenuService.getParent();
         return ResultUtils.success("查询成功！",list);
     }
+    //获取菜单
+    @GetMapping("/getMenuList")
+    public ResultVo getMenuList(Long userId){
+        //获取用户的信息
+        SysUser user = sysUserService.getById(userId);
+        //菜单数据
+        List<SysMenu> menuList = null;
+        //判断是否是超级管理员
+        if(StringUtils.isNotEmpty(user.getIsAdmin()) && "1".equals(user.getIsAdmin())){
+            //是超级管理员,查询所有菜单
+            menuList = sysMenuService.list();
+        }else{
+            menuList = sysMenuService.getMenuByUserId(userId);
+        }
+        //过滤菜单数据,去掉按钮数据
+        List<SysMenu> collect = Optional.ofNullable(menuList).orElse(new ArrayList<>())
+                .stream()
+                .filter(item -> StringUtils.isNotEmpty(item.getType()) && !item.getType().equals("2")).collect(Collectors.toList());
+        //组装路由数据
+        List<RouterVO> rourer = MakeMenuTree.makeRouter(collect, 0L);
+        return ResultUtils.success("查询成功！",rourer);
 
+    }
 
 }

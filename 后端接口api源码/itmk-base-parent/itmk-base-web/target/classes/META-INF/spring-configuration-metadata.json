@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "jwt",
+      "type": "com.itmk.jwt.JwtUtils",
+      "sourceType": "com.itmk.jwt.JwtUtils"
+    }
+  ],
+  "properties": [
+    {
+      "name": "jwt.expiration",
+      "type": "java.lang.Integer",
+      "sourceType": "com.itmk.jwt.JwtUtils",
+      "defaultValue": 0
+    },
+    {
+      "name": "jwt.issuer",
+      "type": "java.lang.String",
+      "sourceType": "com.itmk.jwt.JwtUtils"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.itmk.jwt.JwtUtils"
+    }
+  ],
+  "hints": []
+}

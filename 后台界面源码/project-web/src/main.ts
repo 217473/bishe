@@ -1,5 +1,4 @@
 import { createApp } from 'vue';
-import routes from './router/index';
 //引入element plus
 import ElementPlus from 'element-plus'
 //国际化
@@ -8,17 +7,20 @@ import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import piniaPersist from 'pinia-plugin-persist'
 import myconfirm from './utils/myconfirm';
+//权限验证
+import './permisson'
 // import './style.css'
 import App from './App.vue';
 // 引入Pinia构造函数
 import { createPinia } from 'pinia'
+import router from './router/index';
 // 实例化 Pinia
 const pinia = createPinia()
 //使用持久化插件
 pinia.use(piniaPersist)
 // createApp(App).mount('#app')
 const app = createApp(App);
-app.use(routes).use(ElementPlus,{locale: zhCn}).use(pinia).mount('#app');
+app.use(router).use(ElementPlus,{locale: zhCn}).use(pinia).mount('#app');
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
 }

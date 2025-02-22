@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itmk.web.sys_menu.entity.AssignTreeParm;
 import com.itmk.web.sys_menu.entity.AssignTreeVo;
+import com.itmk.web.sys_menu.entity.MakeMenuTree;
 import com.itmk.web.sys_menu.entity.SysMenu;
 import com.itmk.web.sys_menu.service.SysMenuService;
 import com.itmk.web.sys_user.entity.SysUser;
@@ -105,6 +106,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }else{
             menuList = sysMenuService.getMenuByUserId(parm.getUserId());
         }
+        //组装树数据
+        List<SysMenu> makeTree = MakeMenuTree.makeTree(menuList,0L);
         //查询角色原来的菜单
         List<SysMenu> roleList = sysMenuService.getMenuByRoleId(parm.getRoleId());
         List<Long> ids = new ArrayList<>();
@@ -117,7 +120,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //组装返回数据
         AssignTreeVo vo = new AssignTreeVo();
         vo.setCheckList(ids.toArray());
-        vo.setMenuList(menuList);
-        return null;
+        vo.setMenuList(makeTree);
+        return vo;
     }
 }

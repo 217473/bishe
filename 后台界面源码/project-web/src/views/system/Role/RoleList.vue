@@ -20,7 +20,7 @@
     <el-table :height="tableHeight" :data="tableList" border stripe>
       <el-table-column prop="roleName" label="角色名称"></el-table-column>
       <el-table-column prop="remark" label="角色备注"></el-table-column>
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="操作" width="320" align="center">
         <template #default="scope">
           <el-button
             type="primary"
@@ -28,6 +28,13 @@
             size="default"
             @click="editBtn(scope.row)"
             >编辑</el-button
+          >
+          <el-button
+            type="success"
+            icon="Edit"
+            size="default"
+            @click="assignBtn(scope.row)"
+            >分配菜单</el-button
           >
           <el-button
             type="danger"
@@ -79,6 +86,8 @@
         </el-form>
       </template>
     </SysDialog>
+    <!-- 分配菜单 -->
+    <AssignTree ref="assignTree"></AssignTree>
   </el-main>
 </template>
 
@@ -90,6 +99,9 @@ import { ElMessage, FormInstance } from 'element-plus';
 import { addApi, getListApi, editApi, deleteApi } from '@/api/role/index';
 import { SysRole } from '@/api/role/RoleModel';
 import useInstance from '@/hooks/useInstance';
+import AssignTree from './AssignTree.vue';
+//菜单树的ref属性
+const assignTree = ref();
 //获取全局golbal属性
 const { global } = useInstance();
 //表单ref属性
@@ -103,13 +115,14 @@ const searchParm = reactive({
   roleName: '',
   total: 0,
 });
+
 //判断新增还是编辑的标识  0：新增  1：编辑
 const tags = ref('');
-//新增
+//新增按钮
 const addBtn = () => {
   tags.value = '0';
   dialog.title = '新增';
-  dialog.height = 200;
+  dialog.height = 180;
   //显示弹框
   onShow();
   //清空表单
@@ -123,7 +136,13 @@ const addModel = reactive({
 });
 //表单验证规则
 const rules = reactive({
-  roleName: [{ required: true, message: '请输入角色名称', trigger: 'change' }],
+  roleName: [
+    {
+      required: true,
+      message: '请输入角色名称',
+      trigger: 'change'
+    },
+  ],
 });
 //编辑按钮
 const editBtn = (row: SysRole) => {
@@ -140,6 +159,10 @@ const editBtn = (row: SysRole) => {
   //清空表单
   addRef.value?.resetFields();
 };
+//分配菜单按钮
+const assignBtn = (row: SysRole) => {
+  assignTree.value.show(row.roleId, row.roleName);
+}
 //删除按钮
 const deleteBtn = async (roleId: string) => {
   console.log(roleId);
