@@ -19,11 +19,19 @@ import com.itmk.web.sys_user_role.service.SysUserRoleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -43,16 +51,24 @@ public class SysUserController {
     private JwtUtils jwtUtils;
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //新增
+    @PreAuthorize("hasAnyAuthority('sys:user:add')")
     @PostMapping
     public ResultVo add(@RequestBody SysUser sysUser){
         sysUser.setCreateTime(new Date());
+        //密码加密
+        sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
         sysUserService.saveUser(sysUser);
         return ResultUtils.success("新增成功！");
     }
 
     //编辑
+    @PreAuthorize("hasAnyAuthority('sys:user:edit')")
     @PutMapping
     public ResultVo edit(@RequestBody SysUser sysUser){
         sysUser.setUpdateTime(new Date());
@@ -62,6 +78,7 @@ public class SysUserController {
 
 
     //删除
+    @PreAuthorize("hasAnyAuthority('sys:user:delete')")
     @DeleteMapping("/{userId}")
     public ResultVo delete(@PathVariable("userId") Long userId){
         sysUserService.deleteUser(userId);
@@ -102,11 +119,12 @@ public class SysUserController {
         return ResultUtils.success("查询成功",roleList);
     }
     //重置密码
+    @PreAuthorize("hasAnyAuthority('sys:user:reset')")
     @PostMapping("/resetPassword")
     public ResultVo resetPassword(@RequestBody SysUser sysUser){
         UpdateWrapper<SysUser> query = new UpdateWrapper<>();
         query.lambda().eq(SysUser::getUserId,sysUser.getUserId())
-                .set(SysUser::getPassword,"666666");
+                .set(SysUser::getPassword,passwordEncoder.encode("666666"));
         if (sysUserService.update(query)){
             return ResultUtils.success("密码重置成功！");
         }
@@ -163,21 +181,32 @@ public class SysUserController {
         if (!code1.equals(code)){
             return ResultUtils.error("验证码错误，请重新输入！");
         }
-        //查询用户信息
-        QueryWrapper<SysUser> query = new QueryWrapper<>();
-        query.lambda().eq(SysUser::getUsername,parm.getUsername())
-                .eq(SysUser::getPassword,parm.getPassword());
-        SysUser one = sysUserService.getOne(query);
-        if (one == null){
-            return ResultUtils.error("用户名或密码错误！");
-        }
+        //springSecurity加密之后的密码进行验证
+        String password = passwordEncoder.encode(parm.getPassword());
+        //查询用户信息,交给springSecurity进行验证查询
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(parm.getUsername(),parm.getPassword());
+        Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+        //交给springSecurity进行验证
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        //获取用户信息
+        SysUser user = (SysUser) authenticate.getPrincipal();
+
+//        QueryWrapper<SysUser> query = new QueryWrapper<>();
+//        query.lambda().eq(SysUser::getUsername,parm.getUsername())
+//                .eq(SysUser::getPassword,parm.getPassword());
+//        SysUser one = sysUserService.getOne(query);
+//        if (one == null){
+//            return ResultUtils.error("用户名或密码错误！");
+//        }
         //返回用户信息和token
         LoginVo vo = new LoginVo();
-        vo.setUserId(one.getUserId());
-        vo.setNickName(one.getNickName());
+        vo.setUserId(user.getUserId());
+        vo.setNickName(user.getNickName());
         //生成token
         Map<String, String> map = new HashMap<>();
-        map.put("userId",Long.toString(one.getUserId()));
+        map.put("userId",Long.toString(user.getUserId()));
+        map.put("username",user.getUsername());
         String token = jwtUtils.generateToken(map);
         vo.setToken(token);
         return ResultUtils.success("登录成功！",vo);
@@ -194,12 +223,15 @@ public class SysUserController {
     @PostMapping("/updatePassword")
     public ResultVo updatePassword(@RequestBody UpdatePasswordParm parm){
         SysUser user = sysUserService.getById(parm.getUserId());
-        if(!parm.getOldPassword().equals(user.getPassword())){
+//        if(!parm.getOldPassword().equals(user.getPassword())){
+//            return ResultUtils.error("原密码不正确！");
+//        }
+        if(!passwordEncoder.matches(parm.getOldPassword(),user.getPassword())){
             return ResultUtils.error("原密码不正确！");
         }
         //更新条件
         UpdateWrapper<SysUser> query = new UpdateWrapper<>();
-        query.lambda().set(SysUser::getPassword,parm.getPassword())
+        query.lambda().set(SysUser::getPassword,passwordEncoder.encode(parm.getPassword()))
                 .eq(SysUser::getUserId,parm.getUserId());
         if (sysUserService.update(query)){
             return ResultUtils.success("密码修改成功！");
@@ -213,6 +245,7 @@ public class SysUserController {
         //根据用户id查询用户信息
         SysUser user = sysUserService.getById(userId);
         List<SysMenu> menuList = null;
+        //判断是否是超级管理员
         if(StringUtils.isNotEmpty(user.getIsAdmin()) && "1".equals(user.getIsAdmin())){
             //是超级管理员,查询所有菜单
             menuList = sysMenuService.list();
@@ -222,7 +255,7 @@ public class SysUserController {
         //获取菜单表的code字段
         List<String> collect = Optional.ofNullable(menuList).orElse(new ArrayList<>())
                 .stream()
-                .filter(item -> StringUtils.isNotEmpty(item.getCode()))
+                .filter(item -> item != null && StringUtils.isNotEmpty(item.getCode()))
                 .map(item -> item.getCode())
                 .collect(Collectors.toList());
         //设置返回值
@@ -231,6 +264,16 @@ public class SysUserController {
         userInfo.setUserId(user.getUserId());
         userInfo.setPermissons(collect.toArray());
         return ResultUtils.success("查询成功！",userInfo);
+    }
+
+    //退出登录
+    @PostMapping("loginOut")
+    public ResultVo loginOut(HttpServletRequest request, HttpServletResponse response){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null ){
+            new SecurityContextLogoutHandler().logout(request,response,authentication);
+        }
+        return ResultUtils.success("退出成功！");
     }
 }
 

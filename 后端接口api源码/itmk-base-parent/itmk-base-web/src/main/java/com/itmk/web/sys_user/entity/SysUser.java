@@ -7,11 +7,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.Date;
 
 @Data
 @TableName("sys_user")
-public class SysUser {
+public class SysUser implements UserDetails {
     @TableId(type = IdType.AUTO)
     private Long userId;
     private String username;
@@ -37,5 +41,8 @@ public class SysUser {
     private Date createTime;
     //更新时间
     private Date updateTime;
+    //用户权限字段
+    @TableField(exist = false)
+    Collection<? extends GrantedAuthority> authorities;
 
 }

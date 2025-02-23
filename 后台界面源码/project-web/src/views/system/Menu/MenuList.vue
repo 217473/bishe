@@ -1,13 +1,19 @@
 <template>
-  <el-main>
-    <el-button type="primary" icon="Plus" size="default" @click="addBtn"
+  <el-main style="padding-top: 10px;">
+    <el-button
+      v-if="global.$hasPerm(['sys:menu:add'])"
+      type="primary"
+      icon="Plus"
+      size="default"
+      @click="addBtn"
       >新增</el-button
     >
     <!-- 表格 -->
     <el-table
-      style="margin-top: 20px"
+      style="margin-top: 10px"
       default-expand-all
       :data="tableList"
+      :height = "tableHeight"
       row-key="menuId"
       border
       stripe
@@ -26,10 +32,10 @@
             >目录</el-tag
           >
           <el-tag v-if="scope.row.type == '1'" type="success" size="default"
-            >目录</el-tag
+            >菜单</el-tag
           >
           <el-tag v-if="scope.row.type == '2'" type="primary" size="default"
-            >目录</el-tag
+            >按钮</el-tag
           >
         </template>
       </el-table-column>
@@ -37,10 +43,12 @@
       <el-table-column label="路由名称" prop="name"></el-table-column>
       <el-table-column label="路由地址" prop="path"></el-table-column>
       <el-table-column label="组件路径" prop="url"></el-table-column>
+      <el-table-column label="权限字段" prop="code"></el-table-column>
       <el-table-column label="序号" prop="orderNum"></el-table-column>
-      <el-table-column label="操作" align="center" width="220">
+      <el-table-column v-if="global.$hasPerm(['sys:menu:edit','sys:menu:delete'])" label="操作" align="center" width="220">
         <template #default="scope">
           <el-button
+            v-if="global.$hasPerm(['sys:menu:edit'])"
             type="primary"
             icon="Edit"
             size="default"
@@ -48,6 +56,7 @@
             >编辑</el-button
           >
           <el-button
+            v-if="global.$hasPerm(['sys:menu:delete'])"
             type="danger"
             icon="Delete"
             size="default"
@@ -163,6 +172,8 @@ const { global } = useInstance();
 const addForm = ref<FormInstance>();
 // 弹框属性
 const { dialog, onClose, onShow } = useDialog();
+//表单高度
+const tableHeight = ref(0);
 //获取上级菜单数据
 const treeList = ref([]);
 const getParent = async () => {
@@ -348,6 +359,9 @@ const getList = async () => {
 };
 onMounted(() => {
   getList();
+  nextTick(() => {
+    tableHeight.value = window.innerHeight - 200;
+  });
 });
 </script>
 

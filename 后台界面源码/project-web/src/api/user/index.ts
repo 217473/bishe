@@ -44,3 +44,7 @@ export const updatePasswordApi = (parm: UpdateParm) => {
 export const getInfoApi = (userId: string) => {
   return http.get('/api/sysUser/getInfo',{userId:userId});
 };
+//退出登录
+export const loginOutApi = () => {
+  return http.post('/api/sysUser/loginOut');
+};

@@ -11,6 +11,7 @@ import com.itmk.web.sys_user.entity.SysUser;
 import com.itmk.web.sys_user.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class SysMenuController {
 
 
     //新增
+    @PreAuthorize("hasAnyAuthority('sys:menu:add')")
     @PostMapping
     public ResultVo add(@RequestBody SysMenu sysMenu){
         sysMenu.setCreateTime(new Date());
@@ -39,6 +41,7 @@ public class SysMenuController {
     }
 
     //编辑
+    @PreAuthorize("hasAnyAuthority('sys:menu:edit')")
     @PutMapping
     public ResultVo edit(@RequestBody SysMenu sysMenu){
         sysMenu.setUpdateTime(new Date());
@@ -49,6 +52,7 @@ public class SysMenuController {
     }
 
     //删除
+    @PreAuthorize("hasAnyAuthority('sys:menu:detele')")
     @DeleteMapping("/{menuId}")
     public ResultVo delete(@PathVariable("menuId") Long menuId){
         //如果存在下级，不能删除
@@ -94,14 +98,16 @@ public class SysMenuController {
         //判断是否是超级管理员
         if(StringUtils.isNotEmpty(user.getIsAdmin()) && "1".equals(user.getIsAdmin())){
             //是超级管理员,查询所有菜单
-            menuList = sysMenuService.list();
+            QueryWrapper<SysMenu> query = new QueryWrapper<>();
+            query.lambda().orderByAsc(SysMenu::getOrderNum);
+            menuList = sysMenuService.list(query);
         }else{
             menuList = sysMenuService.getMenuByUserId(userId);
         }
         //过滤菜单数据,去掉按钮数据
         List<SysMenu> collect = Optional.ofNullable(menuList).orElse(new ArrayList<>())
                 .stream()
-                .filter(item -> StringUtils.isNotEmpty(item.getType()) && !item.getType().equals("2")).collect(Collectors.toList());
+                .filter(item -> item != null && StringUtils.isNotEmpty(item.getType()) && !item.getType().equals("2")).collect(Collectors.toList());
         //组装路由数据
         List<RouterVO> rourer = MakeMenuTree.makeRouter(collect, 0L);
         return ResultUtils.success("查询成功！",rourer);

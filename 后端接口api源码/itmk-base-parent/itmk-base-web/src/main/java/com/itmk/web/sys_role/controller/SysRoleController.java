@@ -14,6 +14,7 @@ import com.itmk.web.sys_role_menu.RoleMenu.RoleMenuService;
 import com.itmk.web.sys_role_menu.entity.SaveMenuParm;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,6 +33,7 @@ public class SysRoleController {
     private RoleMenuService roleMenuService;
 
     // 新增
+    @PreAuthorize("hasAnyAuthority('sys:role:add')")
     @PostMapping
     public ResultVo add(@RequestBody SysRole sysRole){
         // 使用 java.util.Date 设置创建时间
@@ -43,6 +45,7 @@ public class SysRoleController {
     }
 
     // 编辑
+    @PreAuthorize("hasAnyAuthority('sys:role:edit')")
     @PutMapping
     public ResultVo edit(@RequestBody SysRole sysRole){
         // 使用 java.util.Date 设置更新时间
@@ -53,6 +56,7 @@ public class SysRoleController {
         return ResultUtils.error("编辑失败！");
     }
     //删除
+    @PreAuthorize("hasAnyAuthority('sys:role:delete')")
     @DeleteMapping("/{roleId}")
     public ResultVo delete(@PathVariable("roleId") Long roleId){
         if (sysRoleService.removeById(roleId)){
@@ -92,6 +96,7 @@ public class SysRoleController {
         return ResultUtils.success("查询成功",selectItmes);
     }
     //保存角色菜单
+    @PreAuthorize("hasAnyAuthority('sys:role:assign')")
     @PostMapping("/saveRoleMenu")
     public ResultVo saveRoleMenu(@RequestBody SaveMenuParm parm) {
         roleMenuService.saveRoleMenu(parm);

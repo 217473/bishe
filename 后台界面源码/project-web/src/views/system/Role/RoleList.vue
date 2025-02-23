@@ -13,16 +13,23 @@
         <el-button icon="Close" type="danger" plain @click="resetBtn"
           >重置</el-button
         >
-        <el-button icon="Plus" type="primary" @click="addBtn">新增</el-button>
+        <el-button
+          v-if="global.$hasPerm(['sys:role:add'])"
+          icon="Plus"
+          type="primary"
+          @click="addBtn"
+          >新增</el-button
+        >
       </el-form-item>
     </el-form>
     <!-- 表格数据 -->
     <el-table :height="tableHeight" :data="tableList" border stripe>
       <el-table-column prop="roleName" label="角色名称"></el-table-column>
       <el-table-column prop="remark" label="角色备注"></el-table-column>
-      <el-table-column label="操作" width="320" align="center">
+      <el-table-column v-if="global.$hasPerm(['sys:role:edit','sys:role:assign','sys:role:delete'])" label="操作" width="320" align="center">
         <template #default="scope">
           <el-button
+            v-if="global.$hasPerm(['sys:role:edit'])"
             type="primary"
             icon="Edit"
             size="default"
@@ -30,6 +37,7 @@
             >编辑</el-button
           >
           <el-button
+            v-if="global.$hasPerm(['sys:role:assign'])"
             type="success"
             icon="Edit"
             size="default"
@@ -37,6 +45,7 @@
             >分配菜单</el-button
           >
           <el-button
+            v-if="global.$hasPerm(['sys:role:delete'])"
             type="danger"
             icon="Delete"
             size="default"
@@ -140,7 +149,7 @@ const rules = reactive({
     {
       required: true,
       message: '请输入角色名称',
-      trigger: 'change'
+      trigger: 'change',
     },
   ],
 });
@@ -162,7 +171,7 @@ const editBtn = (row: SysRole) => {
 //分配菜单按钮
 const assignBtn = (row: SysRole) => {
   assignTree.value.show(row.roleId, row.roleName);
-}
+};
 //删除按钮
 const deleteBtn = async (roleId: string) => {
   console.log(roleId);

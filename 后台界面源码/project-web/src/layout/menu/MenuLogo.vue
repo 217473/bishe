@@ -50,7 +50,7 @@ watch(
     color: #fff;
     font-weight: 800;
     line-height: 60px;
-    font-size: 22px;
+    font-size: 20px;
     font-family: FangSong;
 }
 

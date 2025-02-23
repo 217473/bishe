@@ -19,7 +19,13 @@
         <el-button icon="Close" @click="resetBtn" type="danger" plain
           >重置</el-button
         >
-        <el-button icon="Plus" type="primary" @click="addBtn">新增</el-button>
+        <el-button
+          v-if="global.$hasPerm(['sys:user:add'])"
+          icon="Plus"
+          type="primary"
+          @click="addBtn"
+          >新增</el-button
+        >
       </el-form-item>
     </el-form>
 
@@ -46,9 +52,11 @@
       </el-table-column>
       <el-table-column prop="phone" label="电话"></el-table-column>
       <el-table-column prop="email" label="邮箱"></el-table-column>
-      <el-table-column align="center" width="320" label="操作">
+      <el-table-column prop="username" label="账号"></el-table-column>
+      <el-table-column v-if="global.$hasPerm(['sys:user:edit','sys:user:reset','sys:user:delete'])" align="center" width="320" label="操作">
         <template #default="scope">
           <el-button
+            v-if="global.$hasPerm(['sys:user:edit'])"
             type="primary"
             icon="Edit"
             size="default"
@@ -56,6 +64,7 @@
             >编辑</el-button
           >
           <el-button
+            v-if="global.$hasPerm(['sys:user:reset'])"
             type="warning"
             icon="Setting"
             size="default"
@@ -63,6 +72,7 @@
             >重置密码</el-button
           >
           <el-button
+            v-if="global.$hasPerm(['sys:user:delete'])"
             type="danger"
             icon="Delete"
             size="default"

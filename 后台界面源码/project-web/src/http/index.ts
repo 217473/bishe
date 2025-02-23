@@ -1,8 +1,8 @@
 import axios, {
   AxiosInstance,
   InternalAxiosRequestConfig,
-    AxiosResponse,
-  AxiosRequestConfig
+  AxiosResponse,
+  AxiosRequestConfig,
 } from 'axios';
 
 import { ElMessage } from 'element-plus';
@@ -12,7 +12,7 @@ const config = {
   baseURL: 'http://localhost:8089', //请求接口的地址
   // baseUrl:'/api',
   timeout: 10000, //请求超时时间
-  withCredentials: true//跨域请求时是否需要使用凭证
+  withCredentials: true, //跨域请求时是否需要使用凭证
 };
 //定义返回值类型
 export interface Result<T = any> {
@@ -50,12 +50,20 @@ class Http {
         return error;
       };
     //请求返回之后的处理
-    this.instance.interceptors.response.use((res: AxiosResponse) => {
-      if (res.data.code === 200) {
+    //请求返回之后的拦截器：可以根据后端返回的状态码，做想要提示
+    this.instance.interceptors.response.use((res) => {
+      const store = userSotre();
+      if (res.data.code === 600) {
+        //跳转到登录
+        store.setToken('');
+        store.setUserId('');
+        localStorage.clear();
+        window.location.href = '/login';
+      } else if (res.data.code === 200) {
         return res.data;
       } else {
-        ElMessage.error(res.data.msg || '接口报错');
-        return Promise.reject(res.data.msg || '接口报错');
+        ElMessage.error(res.data.msg || '服务器出错!');
+        return Promise.reject(res.data.msg || '服务器出错');
       }
     }),
       (error: any) => {

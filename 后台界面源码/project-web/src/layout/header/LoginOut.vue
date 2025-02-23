@@ -47,11 +47,11 @@ import SysDialog from '@/components/SysDialog.vue';
 import useDialog from '@/hooks/useDialog';
 import { ElMessage, FormInstance } from 'element-plus';
 import { reactive, ref } from 'vue';
-import { updatePasswordApi } from '@/api/user/index';
+import { updatePasswordApi, loginOutApi } from '@/api/user/index';
 import { useRouter } from 'vue-router';
 import { userSotre } from '@/store/user';
 import useInstance from '@/hooks/useInstance';
-const {global } = useInstance();
+const { global } = useInstance();
 const store = userSotre();
 const router = useRouter();
 //表单ref属性
@@ -114,22 +114,27 @@ const commit = () => {
         //清空缓存
         sessionStorage.clear();
         //跳转去登录
-        router.push({ path: '/login' });
+        window.location.href = '/login';
+        // router.push({ path: '/login' });
       }
     }
   });
 };
 //退出登录
 const loginoutBtn = async () => {
-    //信息确认
-    const confirm = await global.$myconfirm("确定退出登录吗？")
-    if (confirm) {
-        //清空数据
-        sessionStorage.clear();
-        //跳转去登录
-        router.push({ path: '/login' });
+  //信息确认
+  const confirm = await global.$myconfirm('确定退出登录吗？');
+  if (confirm) {
+    let res = await loginOutApi();
+    if (res && res.code == 200) {
+      //清空数据
+      sessionStorage.clear();
+      //跳转去登录
+      window.location.href = '/login';
+      // router.push({ path: '/login' });
     }
-}
+  }
+};
 </script>
 
 <style scoped lang="scss">

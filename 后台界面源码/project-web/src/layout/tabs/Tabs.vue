@@ -43,6 +43,8 @@ const clickBtn = (pane: TabsPaneContext) => {
 };
 //删除
 const removeTab = (targetName: string) => {
+  //首页不能关闭
+  if (targetName === '/dashboard') return;
   //选项卡数据
   const tabs = tabsList.value;
   //当前选项卡的数据

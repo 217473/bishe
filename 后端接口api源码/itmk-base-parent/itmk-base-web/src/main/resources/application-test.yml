@@ -20,6 +20,10 @@ jwt:
   #30分钟过期
   expiration: 30
 
+#不需要token验证的请求，逗号分隔配置
+ignore:
+  url: /api/sysUser/login,/api/sysUser/getImage
+
 # MyBatis Plus配置
 mybatis-plus:
   configuration:
