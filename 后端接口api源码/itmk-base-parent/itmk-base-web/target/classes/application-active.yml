@@ -4,6 +4,8 @@ server:
 
 # 数据库连接配置
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource  # 使用Druid作为数据源
     driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL JDBC驱动

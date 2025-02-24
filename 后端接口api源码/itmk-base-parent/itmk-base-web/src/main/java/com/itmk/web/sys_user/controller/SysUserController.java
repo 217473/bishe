@@ -16,6 +16,7 @@ import com.itmk.web.sys_user.entity.*;
 import com.itmk.web.sys_user.service.SysUserService;
 import com.itmk.web.sys_user_role.entity.SysUserRole;
 import com.itmk.web.sys_user_role.service.SysUserRoleService;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +28,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
@@ -132,9 +132,9 @@ public class SysUserController {
     }
     //图片验证码
     @PostMapping("/getImage")
-    public ResultVo imageCode(HttpServletRequest request){
+    public ResultVo imageCode(jakarta.servlet.http.HttpServletRequest request){
         //获取session
-        HttpSession session = request.getSession();
+        jakarta.servlet.http.HttpSession session = request.getSession();
         //生成验证码
         String test = defaultKaptcha.createText();
         //存放到session
@@ -145,8 +145,9 @@ public class SysUserController {
         try {
             outputStream = new ByteArrayOutputStream();
             ImageIO.write(bufferedImage, "jpg", outputStream);
-            BASE64Encoder encoder = new BASE64Encoder();
-            String base64 = encoder.encode(outputStream.toByteArray());
+//            BASE64Encoder encoder = new BASE64Encoder();
+//            String base64 = encoder.encode(outputStream.toByteArray());
+            String base64 = Base64.encodeBase64String(outputStream.toByteArray());
             String captchaBase64 = "data:image/jpeg;base64," + base64.replaceAll("\r\n","");
             ResultVo result = new ResultVo("生成成功",200,captchaBase64);
             return result;
