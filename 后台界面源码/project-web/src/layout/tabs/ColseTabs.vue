@@ -83,7 +83,7 @@ const closeAll = () => {
 }
 .colse {
   width: 60px;
-  height: 35px;
+  height: 40px;
   position: fixed;
   top: 100;
   right: 0;

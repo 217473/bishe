@@ -1,6 +1,8 @@
+/* 注意事项：白色统一用while */
+
 .green {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -10,21 +12,21 @@
   /* 选项卡颜色 */
   --el-color-mytab: #409eff;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: rgb(22, 123, 216);
   /* 左侧菜单字体大小 */
   --el-mymenu-font: 16px;
   /* 菜单颜色 */
-  --el-color-mymenu: #ffffff;
+  --el-color-mymenu: white;
   /* 一级菜单字体颜色 */
   --el-color-mymenu-first: #303133;
   /* 菜单背景颜色 */
-  --el-color-mymenubg: #ffffff;
+  --el-color-mymenubg: white;
   /* 鼠标放上，菜单颜色 */
   --el-color-mymenu-hover: #ecf5ff;
   /* 子菜单背景颜色 */
-  --el-color-mymenu-child: #ffffff;
+  --el-color-mymenu-child: white;
   /* 菜单点中文字的颜色 */
   --el-color-active-menu: #409eff;
   /* logo和右侧头部分割线 */
@@ -32,16 +34,16 @@
   /* 弹框头部背景色 */
   --el-color-mydialog: #409eff;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
 }
 
 .brown {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -51,7 +53,7 @@
   /* 选项卡颜色 */
   --el-color-mytab: #409eff;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: rgb(22, 123, 216);
   /* 左侧菜单字体大小 */
@@ -69,20 +71,20 @@
   /* 菜单点中文字的颜色 */
   --el-color-active-menu: #409eff;
   /* logo和右侧头部分割线 */
-  --el-color-myheaderleft: #ffffff;
+  --el-color-myheaderleft: white;
   /* 弹框头部背景色 */
   --el-color-mydialog: #409eff;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
 }
 
 .grape {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -92,7 +94,7 @@
   /* 选项卡颜色 */
   --el-color-mytab: #ff2551;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: #000000;
   /* 左侧菜单字体大小 */
@@ -114,16 +116,16 @@
   /* 弹框头部背景色 */
   --el-color-mydialog: #ff2551;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
 }
 
 .default {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -133,7 +135,7 @@
   /* 选项卡颜色 */
   --el-color-mytab: #42b983;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: #000000;
   /* 左侧菜单字体大小 */
@@ -155,16 +157,16 @@
   /* 弹框头部背景色 */
   --el-color-mydialog: #009688;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
 }
 
 .blacks {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -174,7 +176,7 @@
   /* 选项卡颜色 */
   --el-color-mytab: #42b983;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: #000000;
   /* 左侧菜单字体大小 */
@@ -192,23 +194,23 @@
   /* 菜单点中文字的颜色 */
   --el-color-active-menu: #f07810;
   /* logo和右侧头部分割线 */
-  --el-color-myheaderleft: #ffffff;
+  --el-color-myheaderleft: white;
   /* 弹框头部背景色 */
   --el-color-mydialog: #0e1f37;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
 }
 .whites {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
-  --el-color-myheader: #ffffff;
+  --el-color-myheader: white;
   /* 按钮颜色 */
   --el-color-primary: #42b983;
   /* 选项卡颜色 */
@@ -232,7 +234,7 @@
   /* 菜单点中文字的颜色 */
   --el-color-active-menu: #1890ff;
   /* logo和右侧头部分割线 */
-  --el-color-myheaderleft: #ffffff;
+  --el-color-myheaderleft: white;
   /* 弹框头部背景色 */
   --el-color-mydialog: #009688;
   /* 面包屑导航分割线颜色 */
@@ -244,7 +246,7 @@
 }
 .default1 {
   /* 标题字体颜色 */
-  --el-color-logo-color: #ffffff;
+  --el-color-logo-color: white;
   /* 头部高度 */
   --el-header-height: 60px;
   /* 头部背景色 */
@@ -254,7 +256,7 @@
   /* 选项卡颜色 */
   --el-color-mytab: #42b983;
   /* 伸缩图标颜色 */
-  --el-color-collapse: #ffffff;
+  --el-color-collapse: white;
   /* logo背景色 */
   --el-color-mylogo: #2b2f3a;
   /* 左侧菜单字体大小 */
@@ -276,13 +278,11 @@
   /* 弹框头部背景色 */
   --el-color-mydialog: #009688;
   /* 面包屑导航分割线颜色 */
-  --el-text-color-separator: #ffffff;
+  --el-text-color-separator: white;
   /* 面包屑导航字体颜色 */
-  --el-text-color-bred: #ffffff;
+  --el-text-color-bred: white;
   /* 面包屑导航字体大小 */
   --el-text-bred-font-size: 16px;
-}
-.green {
 }
 .el-button:focus {
   color: var(--el-button-text-color);

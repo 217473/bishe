@@ -2,7 +2,7 @@
   <template v-for="menu in menuList" :key="menu.path">
     <!-- 有下级菜单 -->
     <el-sub-menu
-      v-if="menu.children && menu.children.length > 0"
+      v-if="menu.children && menu.children.length > 0 && !menu.redirect"
       :index="menu.path"
     >
       <template #title>
@@ -10,18 +10,18 @@
           <!-- 动态组件的方式生成图标 -->
           <component :is="menu.meta.icon"></component>
         </el-icon>
-        <span>{{ menu.meta.title }}</span>
+        <span style="font-size: var(--el-mymenu-font); font-weight: bold;">{{ menu.meta.title }}</span>
       </template>
       <!-- 生成下级:递归调用：自己调用自己 -->
       <menu-item :menuList="menu.children"></menu-item>
     </el-sub-menu>
     <!-- 没有下级菜单 -->
-    <el-menu-item style="color: #f4f4f5" v-else :index="menu.path">
+    <el-menu-item class="first" v-else :index="menu.path">
       <el-icon>
         <!-- 动态组件的方式生成图标 -->
         <component :is="menu.meta.icon"></component>
       </el-icon>
-      <template #title>{{ menu.meta.title }}</template>
+      <template #title><span style="font-size: var(--el-mymenu-font);font-weight: bold;">{{ menu.meta.title }}</span></template>
     </el-menu-item>
   </template>
 </template>
@@ -31,4 +31,8 @@
 defineProps(['menuList']);
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.first{
+  color: var(--el-color-mymenu-first) !important;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <el-dropdown>
     <span class="el-dropdown-link">
-      <img class="userimg" src="@/assets/login_bg.png" />
+      <img id="picture" class="userimg" src="@/assets/login_bg.png" />
     </span>
     <template #dropdown>
       <el-dropdown-menu>
@@ -46,14 +46,14 @@
 import SysDialog from '@/components/SysDialog.vue';
 import useDialog from '@/hooks/useDialog';
 import { ElMessage, FormInstance } from 'element-plus';
-import { reactive, ref } from 'vue';
+import { reactive, ref ,nextTick} from 'vue';
 import { updatePasswordApi, loginOutApi } from '@/api/user/index';
 import { useRouter } from 'vue-router';
 import { userSotre } from '@/store/user';
 import useInstance from '@/hooks/useInstance';
 const { global } = useInstance();
 const store = userSotre();
-const router = useRouter();
+// const router = useRouter();
 //表单ref属性
 const form = ref<FormInstance>();
 //弹框属性
@@ -105,7 +105,7 @@ const commit = () => {
     if (valid) {
       //判断新密码和确定密码是否一致
       if (upModel.password != upModel.confirm) {
-        ElMessage.error('新密码和确定密码不一致!请重新输入!');
+        ElMessage.warning('新密码和确定密码不一致!请重新输入!');
         return;
       }
       let res = await updatePasswordApi(upModel);
@@ -135,6 +135,16 @@ const loginoutBtn = async () => {
     }
   }
 };
+//头部背景色
+let headerbg = ref("");
+nextTick(() => {
+  //如果头部背景色是白色
+  let headerbox = document.getElementById("picture") as HTMLElement;
+  headerbg.value = getComputedStyle(headerbox).getPropertyValue("--el-color-myheader");
+  if (headerbg.value == 'white') {
+    headerbox.style.background = ' #0e1f37';
+  }
+})
 </script>
 
 <style scoped lang="scss">
@@ -142,8 +152,8 @@ const loginoutBtn = async () => {
   outline: none;
 }
 .userimg {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   cursor: pointer;
   background-color: #fff;

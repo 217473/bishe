@@ -1,5 +1,5 @@
 <template>
-  <el-icon @click="setCollapse" style="cursor: pointer" color="#fff" size="28">
+  <el-icon @click="setCollapse" style="cursor: pointer" color="var(--el-color-collapse)" size="30">
     <component :is="status ? Fold : Expand"></component>
   </el-icon>
 </template>

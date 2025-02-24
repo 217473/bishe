@@ -34,3 +34,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.config.globalProperties.$myconfirm = myconfirm;
 app.config.globalProperties.$hasPerm = hasPerm;
 app.config.globalProperties.$echarts = echarts;
+
+//主题
+import '@/assets/css/theme.css'
+document.getElementsByTagName('html')[0].className = 'green'

@@ -47,7 +47,7 @@ const removeTab = (targetName: string) => {
   if (targetName === '/dashboard') return;
   //选项卡数据
   const tabs = tabsList.value;
-  //当前选项卡的数据
+  //当前激活的选项卡的数据
   let activeName = activeTab.value;
   if (activeName === targetName) {
     tabs.forEach((tab: Tab, index: number) => {
@@ -115,8 +115,8 @@ onMounted(() => {
 }
 :deep(.is-active) {
   border-bottom: 1px solid transparent !important;
-  border: 1px solid #42b983 !important;
-  background-color: #42b983 !important;
+  border: 1px solid var(--el-color-mytab) !important;
+  background-color: var(--el-color-mytab) !important;
   color: #fff !important;
 }
 :deep(.el-tabs__item:hover) {
